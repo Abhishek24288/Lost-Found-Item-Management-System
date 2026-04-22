@@ -16,7 +16,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
-  "https://expense-7c53.onrender.com" // 👈 YOUR FRONTEND URL
+  "https://expense-1-oys1.onrender.com" // 👈 YOUR FRONTEND URL
 ];
 
 app.use(cors({
