@@ -15,8 +15,10 @@ const app = express();
 =========================== */
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://localhost:3000"
+  "http://localhost:3000",
+  "https://lost-found-item-management-system-1-b44w.onrender.com" // ✅ ADD THIS
 ];
+
 
 app.use(cors({
   origin: function (origin, callback) {
