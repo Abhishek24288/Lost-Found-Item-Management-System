@@ -256,7 +256,7 @@ app.get("/api/items/search", async (req, res) => {
 /* ===========================
    SERVER
 =========================== */
-const PORT = process.env.PORT || 2000;
+const PORT = process.env.PORT || 1000;
 
 app.listen(PORT, () => {
   console.log("🚀 Server running on " + PORT);
