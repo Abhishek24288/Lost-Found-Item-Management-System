@@ -1,165 +1,86 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'https://expense-7c53.onrender.com';
+const API = "https://lost-found-item-management-system-67ll.onrender.com";
 
 function Dashboard({ user, onLogout }) {
-  const [expenses, setExpenses] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
-
-  const [expenseData, setExpenseData] = useState({
-    title: '',
-    amount: '',
-    category: 'Food',
+  const [items, setItems] = useState([]);
+  const [form, setForm] = useState({
+    itemName: '',
+    description: '',
+    type: 'Lost',
+    location: '',
+    contactInfo: ''
   });
 
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [msg, setMsg] = useState("");
 
-  // ================= FETCH DATA =================
   useEffect(() => {
-    fetchAll();
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+    fetchItems();
   }, []);
 
-  const fetchAll = async () => {
+  const fetchItems = async () => {
     try {
-      setLoading(true);
-
-      const [expRes, totalRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/expenses`),
-        axios.get(`${API_BASE_URL}/expenses/total`)
-      ]);
-
-      setExpenses(expRes.data || []);
-      setTotal(totalRes.data.total || 0);
-
-    } catch (err) {
-      console.error(err);
-      setMessage({ type: 'error', text: 'Failed to load data' });
-    } finally {
-      setLoading(false);
+      const res = await axios.get(`${API}/api/items`);
+      setItems(res.data);
+    } catch {
+      setMsg("❌ Failed to load items");
     }
   };
 
-  // ================= HANDLE INPUT =================
   const handleChange = (e) => {
-    setExpenseData({ ...expenseData, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // ================= ADD EXPENSE =================
-  const handleAddExpense = async (e) => {
+  const addItem = async (e) => {
     e.preventDefault();
-    setMessage({ type: '', text: '' });
-
-    if (!expenseData.title || !expenseData.amount) {
-      return setMessage({ type: 'error', text: 'All fields are required' });
-    }
 
     try {
-      await axios.post(`${API_BASE_URL}/expense`, {
-        ...expenseData,
-        amount: Number(expenseData.amount),
+      await axios.post(`${API}/api/items`, form);
+      setMsg("✅ Item added");
+      setForm({
+        itemName: '',
+        description: '',
+        type: 'Lost',
+        location: '',
+        contactInfo: ''
       });
-
-      setMessage({ type: 'success', text: '✅ Expense added successfully' });
-
-      setExpenseData({ title: '', amount: '', category: 'Food' });
-
-      fetchAll();
-
-    } catch (err) {
-      setMessage({
-        type: 'error',
-        text: err.response?.data?.message || 'Failed to add expense',
-      });
+      fetchItems();
+    } catch {
+      setMsg("❌ Error adding item");
     }
   };
 
-  // ================= UI =================
   return (
     <div className="dashboard">
+      <h2>Welcome {user?.name}</h2>
+      <button onClick={onLogout}>Logout</button>
 
-      {/* HEADER */}
-      <div className="header">
-        <h2>👋 Hello, {user?.name || "User"}</h2>
-        <button onClick={onLogout} className="logout">Logout</button>
-      </div>
+      <form onSubmit={addItem}>
+        <input name="itemName" placeholder="Item Name" value={form.itemName} onChange={handleChange} />
+        <input name="description" placeholder="Description" value={form.description} onChange={handleChange} />
+        <input name="location" placeholder="Location" value={form.location} onChange={handleChange} />
+        <input name="contactInfo" placeholder="Contact" value={form.contactInfo} onChange={handleChange} />
 
-      {/* TOTAL */}
-      <div className="total-box">
-        ₹ {total}
-        <div style={{ fontSize: '14px', fontWeight: 'normal' }}>
-          Total Spent
-        </div>
-      </div>
-
-      {/* MESSAGE */}
-      {message.text && (
-        <p className={message.type === 'error' ? 'error' : 'success'}>
-          {message.text}
-        </p>
-      )}
-
-      {/* FORM */}
-      <form onSubmit={handleAddExpense} className="expense-form">
-        <input
-          name="title"
-          placeholder="Expense Title"
-          value={expenseData.title}
-          onChange={handleChange}
-        />
-
-        <input
-          name="amount"
-          type="number"
-          placeholder="Amount"
-          value={expenseData.amount}
-          onChange={handleChange}
-        />
-
-        <select
-          name="category"
-          value={expenseData.category}
-          onChange={handleChange}
-        >
-          <option>Food</option>
-          <option>Travel</option>
-          <option>Bills</option>
-          <option>Shopping</option>
-          <option>Entertainment</option>
-          <option>Health</option>
-          <option>Others</option>
+        <select name="type" value={form.type} onChange={handleChange}>
+          <option>Lost</option>
+          <option>Found</option>
         </select>
 
-        <button type="submit">Add Expense</button>
+        <button>Add Item</button>
       </form>
 
-      {/* LIST */}
-      <div className="list">
+      <p>{msg}</p>
 
-        {loading ? (
-          <p style={{ textAlign: 'center' }}>Loading...</p>
-        ) : expenses.length === 0 ? (
-          <p style={{ textAlign: 'center' }}>No expenses yet 🚫</p>
-        ) : (
-          expenses.map((exp, i) => (
-            <div key={i} className="item">
-              <div>
-                <strong>{exp.title}</strong>
-                <div style={{ fontSize: '12px', opacity: 0.7 }}>
-                  {new Date(exp.date).toLocaleDateString('en-IN')}
-                </div>
-              </div>
-
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontWeight: 'bold' }}>₹{exp.amount}</div>
-                <span>{exp.category}</span>
-              </div>
-            </div>
-          ))
-        )}
-
-      </div>
+      {items.map((i) => (
+        <div key={i._id}>
+          <b>{i.itemName}</b> ({i.type}) - {i.location}
+        </div>
+      ))}
     </div>
   );
 }

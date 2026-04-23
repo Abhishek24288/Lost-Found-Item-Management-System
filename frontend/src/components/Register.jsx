@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'https://expense-7c53.onrender.com';
+const API_BASE_URL = 'https://lost-found-item-management-system-67ll.onrender.com';
 
 function Register({ onSuccess }) {
   const [formData, setFormData] = useState({
@@ -13,32 +13,51 @@ function Register({ onSuccess }) {
   const [message, setMessage] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
 
+  // INPUT HANDLE
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
+  // SUBMIT
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ type: '', text: '' });
 
     if (formData.password.length < 6) {
-      return setMessage({ type: 'error', text: 'Password must be at least 6 characters' });
+      return setMessage({
+        type: 'error',
+        text: 'Password must be at least 6 characters'
+      });
     }
 
     try {
       setLoading(true);
-      const res = await axios.post(`${API_BASE_URL}/register`, formData);
 
-      setMessage({ type: 'success', text: res.data.message || 'Registered successfully!' });
+      const res = await axios.post(
+        `${API_BASE_URL}/api/register`,
+        formData
+      );
 
-      setFormData({ name: '', email: '', password: '' });
+      setMessage({
+        type: 'success',
+        text: res.data.message || '✅ Registered successfully'
+      });
+
+      setFormData({
+        name: '',
+        email: '',
+        password: ''
+      });
 
       onSuccess && onSuccess();
 
     } catch (err) {
       setMessage({
         type: 'error',
-        text: err.response?.data?.message || 'Registration failed',
+        text: err.response?.data?.message || '❌ Registration failed'
       });
     } finally {
       setLoading(false);
@@ -56,9 +75,31 @@ function Register({ onSuccess }) {
       )}
 
       <form onSubmit={handleSubmit}>
-        <input name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} required />
-        <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-        <input name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
+        <input
+          name="name"
+          placeholder="Full Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          name="email"
+          type="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
 
         <button disabled={loading}>
           {loading ? 'Creating Account...' : 'Register'}

@@ -5,16 +5,16 @@
   box-sizing: border-box;
 }
 
-/* BACKGROUND */
+/* BODY */
 body {
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #4facfe, #00f2fe);
   min-height: 100vh;
 }
 
-/* APP WRAPPER */
+/* APP */
 .app {
-  max-width: 1100px;
+  max-width: 1000px;
   margin: auto;
   padding: 20px;
 }
@@ -24,32 +24,31 @@ h1 {
   text-align: center;
   color: white;
   margin-bottom: 30px;
-  font-weight: 600;
 }
 
 /* AUTH CONTAINER */
 .container {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
-/* CARD DESIGN */
-.auth-form {
-  background: rgba(255, 255, 255, 0.15);
-  --webkit-backdrop-filter: blur(15px);
-  padding: 30px;
+/* CARD */
+.card {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  padding: 25px;
   border-radius: 15px;
-  width: 320px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  width: 300px;
   color: white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* INPUTS */
+/* INPUT */
 input, select {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   margin: 10px 0;
   border-radius: 8px;
   border: none;
@@ -59,24 +58,30 @@ input, select {
 /* BUTTON */
 button {
   width: 100%;
-  padding: 12px;
-  margin-top: 10px;
+  padding: 10px;
   border: none;
   border-radius: 8px;
-  background: #1e90ff;
+  background: #007bff;
   color: white;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 button:hover {
-  background: #187bcd;
+  background: #0056b3;
 }
 
 /* ERROR */
 .error {
-  color: #ff6b6b;
+  color: #ff4d4d;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* SUCCESS */
+.success {
+  color: #00ffcc;
   text-align: center;
   margin-bottom: 10px;
 }
@@ -84,7 +89,7 @@ button:hover {
 /* DASHBOARD */
 .dashboard {
   background: rgba(255,255,255,0.2);
-  --webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(12px);
   padding: 25px;
   border-radius: 15px;
   color: white;
@@ -97,52 +102,62 @@ button:hover {
   align-items: center;
 }
 
-/* LOGOUT BUTTON */
+/* LOGOUT */
 .logout {
-  background: #ff4d4d;
+  background: red;
   width: auto;
-  padding: 8px 15px;
-}
-
-/* TOTAL BOX */
-.total-box {
-  margin: 20px 0;
-  padding: 20px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
-  text-align: center;
-  font-size: 28px;
-  font-weight: bold;
+  padding: 6px 12px;
 }
 
 /* FORM */
-.expense-form {
-  margin-bottom: 20px;
+form {
+  margin-top: 20px;
 }
 
-/* EXPENSE LIST */
+/* LIST */
 .list {
   margin-top: 20px;
 }
 
-/* EXPENSE ITEM */
+/* ITEM CARD */
 .item {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.25);
   padding: 15px;
   margin-bottom: 10px;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
-  transition: 0.3s;
+  align-items: center;
 }
 
-.item:hover {
-  transform: scale(1.02);
-}
-
-/* CATEGORY TAG */
-.item span {
+/* ITEM LEFT */
+.item strong {
   display: block;
+}
+
+/* TYPE BADGE */
+.badge {
+  padding: 4px 10px;
+  border-radius: 8px;
   font-size: 12px;
-  opacity: 0.8;
+  margin-top: 5px;
+  display: inline-block;
+}
+
+/* LOST */
+.badge.lost {
+  background: #ff4d4d;
+}
+
+/* FOUND */
+.badge.found {
+  background: #00c851;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
